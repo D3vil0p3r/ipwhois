@@ -1415,68 +1415,71 @@ class IPWhoisCLI:
 
         return output
 
+def main():
+    if script_args.addr:
 
-if script_args.addr:
+        results = IPWhoisCLI(
+            addr=script_args.addr[0],
+            timeout=script_args.timeout,
+            proxy_http=script_args.proxy_http if (
+                script_args.proxy_http and len(script_args.proxy_http) > 0
+            ) else None,
+            proxy_https=script_args.proxy_https if (
+                script_args.proxy_https and len(script_args.proxy_https) > 0
+            ) else None
+        )
 
-    results = IPWhoisCLI(
-        addr=script_args.addr[0],
-        timeout=script_args.timeout,
-        proxy_http=script_args.proxy_http if (
-            script_args.proxy_http and len(script_args.proxy_http) > 0
-        ) else None,
-        proxy_https=script_args.proxy_https if (
-            script_args.proxy_https and len(script_args.proxy_https) > 0
-        ) else None
-    )
+        if script_args.whois:
 
-    if script_args.whois:
+            print(results.lookup_whois(
+                hr=script_args.hr,
+                show_name=script_args.show_name,
+                colorize=script_args.colorize,
+                inc_raw=script_args.inc_raw,
+                retry_count=script_args.retry_count,
+                get_referral=script_args.get_referral,
+                extra_blacklist=script_args.extra_blacklist.split(',') if (
+                    script_args.extra_blacklist and
+                    len(script_args.extra_blacklist) > 0) else None,
+                ignore_referral_errors=script_args.ignore_referral_errors,
+                field_list=script_args.field_list.split(',') if (
+                    script_args.field_list and
+                    len(script_args.field_list) > 0) else None,
+                extra_org_map=script_args.extra_org_map,
+                inc_nir=(not script_args.exclude_nir),
+                nir_field_list=script_args.nir_field_list.split(',') if (
+                    script_args.nir_field_list and
+                    len(script_args.nir_field_list) > 0) else None,
+                asn_methods=script_args.asn_methods.split(',') if (
+                    script_args.asn_methods and
+                    len(script_args.asn_methods) > 0) else None,
+                get_asn_description=(not script_args.skip_asn_description)
+            ))
 
-        print(results.lookup_whois(
-            hr=script_args.hr,
-            show_name=script_args.show_name,
-            colorize=script_args.colorize,
-            inc_raw=script_args.inc_raw,
-            retry_count=script_args.retry_count,
-            get_referral=script_args.get_referral,
-            extra_blacklist=script_args.extra_blacklist.split(',') if (
-                script_args.extra_blacklist and
-                len(script_args.extra_blacklist) > 0) else None,
-            ignore_referral_errors=script_args.ignore_referral_errors,
-            field_list=script_args.field_list.split(',') if (
-                script_args.field_list and
-                len(script_args.field_list) > 0) else None,
-            extra_org_map=script_args.extra_org_map,
-            inc_nir=(not script_args.exclude_nir),
-            nir_field_list=script_args.nir_field_list.split(',') if (
-                script_args.nir_field_list and
-                len(script_args.nir_field_list) > 0) else None,
-            asn_methods=script_args.asn_methods.split(',') if (
-                script_args.asn_methods and
-                len(script_args.asn_methods) > 0) else None,
-            get_asn_description=(not script_args.skip_asn_description)
-        ))
+        else:
 
-    else:
+            print(results.lookup_rdap(
+                hr=script_args.hr,
+                show_name=script_args.show_name,
+                colorize=script_args.colorize,
+                inc_raw=script_args.inc_raw,
+                retry_count=script_args.retry_count,
+                depth=script_args.depth,
+                excluded_entities=script_args.excluded_entities.split(',') if (
+                    script_args.excluded_entities and
+                    len(script_args.excluded_entities) > 0) else None,
+                bootstrap=script_args.bootstrap,
+                rate_limit_timeout=script_args.rate_limit_timeout,
+                extra_org_map=script_args.extra_org_map,
+                inc_nir=(not script_args.exclude_nir),
+                nir_field_list=script_args.nir_field_list.split(',') if (
+                    script_args.nir_field_list and
+                    len(script_args.nir_field_list) > 0) else None,
+                asn_methods=script_args.asn_methods.split(',') if (
+                    script_args.asn_methods and
+                    len(script_args.asn_methods) > 0) else None,
+                get_asn_description=(not script_args.skip_asn_description)
+            ))
 
-        print(results.lookup_rdap(
-            hr=script_args.hr,
-            show_name=script_args.show_name,
-            colorize=script_args.colorize,
-            inc_raw=script_args.inc_raw,
-            retry_count=script_args.retry_count,
-            depth=script_args.depth,
-            excluded_entities=script_args.excluded_entities.split(',') if (
-                script_args.excluded_entities and
-                len(script_args.excluded_entities) > 0) else None,
-            bootstrap=script_args.bootstrap,
-            rate_limit_timeout=script_args.rate_limit_timeout,
-            extra_org_map=script_args.extra_org_map,
-            inc_nir=(not script_args.exclude_nir),
-            nir_field_list=script_args.nir_field_list.split(',') if (
-                script_args.nir_field_list and
-                len(script_args.nir_field_list) > 0) else None,
-            asn_methods=script_args.asn_methods.split(',') if (
-                script_args.asn_methods and
-                len(script_args.asn_methods) > 0) else None,
-            get_asn_description=(not script_args.skip_asn_description)
-        ))
+if __name__ == "__main__":
+    main()
